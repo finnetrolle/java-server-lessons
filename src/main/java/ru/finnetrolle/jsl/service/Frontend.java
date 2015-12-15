@@ -37,12 +37,8 @@ public class Frontend extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Map<String, Object> pageVariables = getHeadersMap.apply(req);
         String key = req.getParameter(KEY_PARAMETER);
-        System.out.println("Recieved: " + key);
-        pageVariables.put(S_MESSAGE, "");
-//        resp.getWriter().println(StringUtils.isEmpty(key) ? "ERROR" : key);
-        resp.getWriter().println(PageGenerator.instance().getPage(TEMPLATE_FILE, pageVariables));
+        resp.getWriter().println(StringUtils.isEmpty(key) ? "ERROR" : key);
         finalize(resp, SC_OK);
     }
 
