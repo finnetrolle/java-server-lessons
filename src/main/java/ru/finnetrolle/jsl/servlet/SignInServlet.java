@@ -1,0 +1,42 @@
+package ru.finnetrolle.jsl.servlet;
+
+
+import ru.finnetrolle.jsl.model.User;
+import ru.finnetrolle.jsl.service.AuthService;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+
+/**
+ * Created by finnetrolle on 19.12.2015.
+ */
+public class SignInServlet extends SignServlet {
+
+    public SignInServlet(AuthService authService) {
+        super(authService);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String sessionId = req.getSession().getId();
+        String login = req.getParameter(LOGIN_FIELD_NAME);
+        String password = req.getParameter(PASSWORD_FIELD_NAME);
+        resp.setContentType(CONTENT_TYPE);
+
+        User user = authService.authorize(sessionId, login, password);
+        if (user == null) {
+            resp.getWriter().println(UNAUTHORIZED_MESSAGE);
+            resp.setStatus(SC_UNAUTHORIZED);
+        } else {
+            resp.getWriter().println(AUTHORIZED_MESSAGE);
+            resp.setStatus(SC_OK);
+        }
+    }
+
+}
